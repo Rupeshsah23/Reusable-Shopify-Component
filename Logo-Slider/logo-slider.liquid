@@ -1,0 +1,314 @@
+{% style %}
+.marquee-slider:hover ul {
+  cursor:pointer;
+  animation-play-state: paused !important;
+}
+.marquee-slider {
+  overflow: hidden;
+}
+.marquee-slider ul {
+  display: flex;
+  animation: marquee 10s infinite cubic-bezier(0, 0.02, 0.99, 0.99);
+  list-style:none;
+  transition:all 0.5s ease-in-out;
+}
+.marquee-slider ul li {
+  margin-right: 20px;
+}
+.marquee-slider img.logo__image, .marquee-slider svg {
+  width: auto;
+  height: 160px;
+  object-fit: contain;
+  min-width: 250px;
+  border: 1px solid #ccc;
+  box-shadow: 1px 2px 5px #ccc;
+  max-width: 250px;
+}
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+  
+{% endstyle %}
+<div class="logo_gird color-{{ section.settings.color_scheme }} gradient{% unless section.settings.background_style == 'none' and settings.text_boxes_border_thickness > 0 or settings.text_boxes_shadow_opacity > 0 %} background-{{ section.settings.background_style }}{% endunless %}{% if section.settings.title == blank %} no-heading{% endif %}">
+  <div class="page-width section-{{ section.id }}-padding isolate">
+    {%- unless section.settings.title == blank -%}
+      <div class="title-wrapper-with-link title-wrapper--self-padded-mobile title-wrapper--no-top-margin {% if section.settings.column_alignment == 'center' %} center{% endif %}">
+        <h2 class="title {{ section.settings.heading_size }}">
+          {{ section.settings.title | escape }}
+        </h2>
+      </div>
+    {%- endunless -%}
+  <div class="marquee-slider">
+  <ul>
+        {%- for block in section.blocks -%}
+    <li>
+            {%- if block.settings.image -%}
+                  {% if block.settings.link != blank %}
+                    <a href="{{ block.settings.link }}" target="_blank">
+                  {% endif %}
+                {{
+                      block.settings.image | image_url: width: original
+                      | image_tag:
+                        loading: 'lazy',
+                        widths: '275, 550, 710, 1420',
+                        class: 'logo__image'
+                    }}
+                  {% if block.settings.link != blank %}
+                    </a>
+                  {% endif %}
+            {%- else -%}
+                {{ 'lifestyle-2' | placeholder_svg_tag: 'placeholder-svg' }}
+              {%- endif -%}
+    </li>
+          {% endfor %}
+  </ul>
+  </div>
+</div>
+</div>
+<!-- <script>
+  const marqueeSlider = document.querySelector('.marquee-slider ul');
+
+// Clone the list of logos
+const clonedLogos = marqueeSlider.cloneNode(true);
+marqueeSlider.after(clonedLogos);
+
+// Start the infinite scroll animation
+setInterval(() => {
+  marqueeSlider.style.animation = 'none';
+  marqueeSlider.offsetHeight; // Force reflow to reset the animation
+  marqueeSlider.style.animation = 'marquee 10s infinite linear';
+}, 10000);
+
+</script> -->
+
+{% schema %}
+{
+  "name": "Logo Slide",
+  "class": "section logo-slide",
+  "tag": "section",
+  "disabled_on": {
+    "groups": ["header", "footer"]
+  },
+  "settings": [
+    {
+      "type": "text",
+      "id": "title",
+      "default": "Logo",
+      "label": "Heading"
+    },
+    {
+      "type": "select",
+      "id": "heading_size",
+      "options": [
+        {
+          "value": "h2",
+          "label": "Small"
+        },
+        {
+          "value": "h1",
+          "label": "Medium"
+        },
+        {
+          "value": "h0",
+          "label": "Large"
+        }
+      ],
+      "default": "h1",
+      "label": "Medium"
+    },
+    {
+      "type": "select",
+      "id": "column_alignment",
+      "options": [
+        {
+          "value": "left",
+          "label": "Left"
+        },
+        {
+          "value": "center",
+          "label": "Center"
+        }
+      ],
+      "default": "left",
+      "label": "Left"
+    },
+    {
+      "type": "select",
+      "id": "image_ratio",
+      "options": [
+        {
+          "value": "adapt",
+          "label": "Adapt to image"
+        },
+        {
+          "value": "portrait",
+          "label": "Portrait"
+        },
+        {
+          "value": "square",
+          "label": "Square"
+        },
+        {
+          "value": "circle",
+          "label": "Circle"
+        }
+      ],
+      "default": "adapt",
+      "label": "Adapt to image"
+    },
+    {
+      "type": "range",
+      "id": "columns_desktop",
+      "min": 1,
+      "max": 6,
+      "step": 1,
+      "default": 3,
+      "label": "Number of columns on desktop"
+    },
+    {
+      "type": "select",
+      "id": "background_style",
+      "options": [
+        {
+          "value": "none",
+          "label": "None"
+        },
+        {
+          "value": "primary",
+          "label": "Show as column background"
+        }
+      ],
+      "default": "primary",
+      "label": "Show as column background"
+    },
+    {
+      "type": "text",
+      "id": "button_label",
+      "label": "Button Label"
+    },
+    {
+      "type": "url",
+      "id": "button_link",
+      "label": "Button Link"
+    },
+    {
+      "type": "select",
+      "id": "color_scheme",
+      "options": [
+        {
+          "value": "accent-1",
+          "label": "Accent 1"
+        },
+        {
+          "value": "accent-2",
+          "label": "Accent 2"
+        },
+        {
+          "value": "background-1",
+          "label": "Background 1"
+        },
+        {
+          "value": "background-2",
+          "label": "Background 2"
+        },
+        {
+          "value": "inverse",
+          "label": "Inverse"
+        }
+      ],
+      "default": "background-1",
+      "label": "Background 1"
+    },
+    {
+      "type": "header",
+      "content": "MOBILE LAYOUT"
+    },
+    {
+      "type": "select",
+      "id": "columns_mobile",
+      "options": [
+        {
+          "value": "1",
+          "label": "1 column"
+        },
+        {
+          "value": "2",
+          "label": "2 columns"
+        }
+      ],
+      "default": "2",
+      "label": "2 columns"
+    },
+    {
+      "type": "checkbox",
+      "id": "swipe_on_mobile",
+      "default": false,
+      "label": "Enable swipe on mobile"
+    },
+    {
+      "type": "header",
+      "content": "SECTION PADDING"
+    },
+    {
+      "type": "range",
+      "id": "padding_top",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Top",
+      "default": 36
+    },
+    {
+      "type": "range",
+      "id": "padding_bottom",
+      "min": 0,
+      "max": 100,
+      "step": 4,
+      "unit": "px",
+      "label": "Padding Bottom",
+      "default": 36
+    }
+  ],
+  "blocks": [
+    {
+      "type": "logo",
+      "name": "Logo",
+      "settings": [
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Image"
+        },
+        {
+          "type": "url",
+          "id": "link",
+          "label": "link"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Logo Slide",
+      "blocks": [
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        },
+        {
+          "type": "logo"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

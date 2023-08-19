@@ -1,0 +1,214 @@
+
+      <div class="custom-model-main video-popup">
+    <div class="custom-model-inner">
+        <div class="custom-model-wrap text-center">        
+    <div class="close-btn">×</div>
+            <div class="pop-up-content-wrap">
+              {%- for block in section.blocks -%}
+                 {%- if block.settings.video_url != null -%}
+                          {%- liquid
+                            assign loop = ''
+                            if block.settings.enable_video_looping
+                              assign loop = '&loop=1&playlist=' | append: video_id
+                            endif
+                          -%}
+                          {%- if block.settings.video_url.type == 'youtube' -%}
+                            <iframe
+                              src="https://www.youtube.com/embed/{{ block.settings.video_url.id }}?enablejsapi=1&autoplay=0{{ loop }}"
+                              class="js-youtube"
+                              width="850" height="480" frameborder="0"
+                              allow="autoplay; encrypted-media"
+                              allowfullscreen
+                              title="{{ block.settings.description | escape }}"
+                            ></iframe>
+                          {%- else -%}
+                            <iframe
+                              src="https://player.vimeo.com/video/{{ block.settings.video_url.id }}?autoplay=0{{ loop }}"
+                              class="js-vimeo"
+                              allow="autoplay; encrypted-media"
+                              allowfullscreen
+                              title="{{ block.settings.description | escape }}"
+                            ></iframe>
+                          {%- endif -%}
+                        {%- endif -%}
+                {% endfor %}
+            </div>
+        </div>  
+    </div>  
+    <div class="bg-overlay"></div>
+</div> 
+{% style %}
+  .custom-model-main.video-popup.model-open .custom-model-inner {
+    max-width: 900px;
+    height: auto;
+  }
+  .custom-model-main.video-popup iframe, .custom-model-main.video-popup video {
+      height: unset;
+    border: transparent;
+      width:100%;
+      height:500px;
+  }
+   .custom-model-main.video-popup {
+      padding-bottom: 0;
+      margin-bottom: 20px;
+  }
+  .pop-up-content-wrap h2 {
+      font: normal normal 800 53px/60px Nanum Myeongjo;
+      letter-spacing: 0px;
+      color: #3C3C3C;
+      margin-top:15px;
+      margin-bottom: 15px;
+  }
+  
+  .pop-up-content-wrap p {
+      font: normal normal normal 18px/22px Nanum Gothic;
+      letter-spacing: 0px;
+      color: #171616;
+      margin-bottom: 30px;
+  }
+  .custom-model-main {
+    text-align: center;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0; /* z-index: 1050; */
+    -webkit-overflow-scrolling: touch;
+    outline: 0;
+    opacity: 0;
+    -webkit-transition: opacity 0.15s linear, z-index 0.15;
+    -o-transition: opacity 0.15s linear, z-index 0.15;
+    transition: opacity 0.15s linear, z-index 0.15;
+    z-index: -1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    display: none;
+  }
+  
+  .model-open {
+    z-index: 99999;
+    opacity: 1;
+    overflow: hidden;
+    display: block;
+  }
+  .custom-model-inner {
+    -webkit-transform: translate(0, -25%);
+    -ms-transform: translate(0, -25%);
+    transform: translate(0, -25%);
+    -webkit-transition: -webkit-transform 0.3s ease-out;
+    -o-transition: -o-transform 0.3s ease-out;
+    transition: -webkit-transform 0.3s ease-out;
+    -o-transition: transform 0.3s ease-out;
+    transition: transform 0.3s ease-out;
+    transition: transform 0.3s ease-out, -webkit-transform 0.3s ease-out;
+    display: inline-block;
+    vertical-align: middle;
+    max-width: 600px;
+    width: 100%;
+    margin: 30px auto;
+  }
+  .custom-model-wrap {
+    display: block;
+    width: 100%;
+    position: absolute;
+    outline: 0;
+    padding: 40px 20px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    max-height: calc(100vh - 70px);
+    overflow-y: auto;
+    background: #FAF5ED 0% 0% no-repeat padding-box;
+    border-radius: 16px;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    -webkit-transform: translate(-50%, -50%);
+    -ms-transform: translate(-50%, -50%);
+    width: calc(100% - 50px);
+  }
+  .model-open .custom-model-inner {
+    -webkit-transform: translate(0, 0);
+    -ms-transform: translate(0, 0);
+    transform: translate(0, 0);
+    position: relative;
+    z-index: 999;
+  }
+  .model-open .bg-overlay {
+    background: #171616 0% 0% no-repeat padding-box;
+    opacity: 0.5;
+    z-index: 99;
+    display:block;
+  }
+  .bg-overlay {
+    background: rgba(0, 0, 0, 0);
+    height: 100vh;
+    width: 100%;
+    position: fixed;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 0;
+    -webkit-transition: background 0.15s linear;
+    -o-transition: background 0.15s linear;
+    transition: background 0.15s linear;
+  }
+  .close-btn {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    cursor: pointer;
+    z-index: 99;
+    font-size: 40px;
+    color: #000;
+    line-height: 23px;
+  }
+  .custom-model-main:before {
+  	  content: "";
+  	  display: inline-block;
+  	  height: auto;
+  	  vertical-align: middle;
+  	  height: 100%;
+  }
+  .pop-up-content-wrap .banner__buttons.banner__buttons--multiple {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      max-width: 45rem;
+      word-break: break-word;
+  }
+@media only screen and (max-width: 920px){
+  .custom-model-main.video-popup .custom-model-wrap {
+    transform: translate(-50%, -120%);
+    -webkit-transform: translate(-50%, -120%);
+    -ms-transform: translate(-50%, -120%);
+    top: 0%;
+    height: auto;
+  }
+}
+@media screen and (max-width:799px){
+  .custom-model-inner{
+    margin-top: 45px;
+  }
+}
+{% endstyle %}
+
+<script>
+  
+  document.querySelectorAll("#video-popup").forEach(function(element) {
+  var videoURL = document.querySelector(".video-popup iframe").src;
+  element.addEventListener('click', function() {
+      document.querySelector(".video-popup").classList.add('model-open');
+      document.querySelector('.video-popup iframe').setAttribute('src', videoURL);
+    });
+  });
+
+document.querySelectorAll(".close-btn, .bg-overlay").forEach(function(element) {
+  element.addEventListener('click', function() {
+      document.querySelector(".video-popup").classList.remove('model-open');
+        document.querySelector('.video-popup iframe').removeAttribute('src', '');
+    });
+  });
+</script>
